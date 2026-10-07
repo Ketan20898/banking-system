@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,11 +41,11 @@ public class Account {
 	@Column(nullable = false)
 	private String phone;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private AccountType accountType;
 	
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private AccountStatus status;
 	
