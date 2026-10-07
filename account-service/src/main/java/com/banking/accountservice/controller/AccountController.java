@@ -1,15 +1,20 @@
 package com.banking.accountservice.controller;
 
+import java.math.BigDecimal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.banking.accountservice.dto.AccountResponse;
 import com.banking.accountservice.dto.CreateAccountRequest;
-import com.banking.accountservice.dto.CreateAccountResponse;
 import com.banking.accountservice.service.AccountService;
 
 import jakarta.validation.Valid;
@@ -25,12 +30,46 @@ public class AccountController {
 	private final AccountService accountService;
 	
 	@PostMapping()
-	public ResponseEntity<CreateAccountResponse> createAccountReq(@Valid @RequestBody CreateAccountRequest request){
+	public ResponseEntity<AccountResponse> createAccountReq(@Valid @RequestBody CreateAccountRequest request){
 		return ResponseEntity.status(HttpStatus.CREATED).body(accountService.createAccount(request));
 	}
 	
-	public ResponseEntity<CreateAccountResponse> getAccount(@PathVariable String accountNumber){
-		return accountService.get
+	@GetMapping("/{accountNumber}")
+	public ResponseEntity<AccountResponse> getAccount(@PathVariable String accountNumber){
+		return ResponseEntity.ok(accountService.getAccount(accountNumber));
 	}
 
+	
+	@GetMapping("/{accountNumber}/balance")
+	public ResponseEntity<BigDecimal> getBalance(@PathVariable String accountNumber){
+		return ResponseEntity.ok(accountService.getBalance(accountNumber));
+	}
+	
+	@PostMapping("/{accountNumber}/block")
+	public ResponseEntity<String> blockAccount(@PathVariable String accountNumber){
+		accountService.blockAccount(accountNumber);
+		return ResponseEntity.ok("account blocked successfully");
+	}
+	
+//	Saga Step-1 Deduct Balance
+//	Called by transaction service when transer is initiated
+	@PutMapping("/{accountNumber}/deduct")
+	public ResponseEntity<String> deductBalance(@PathVariable String accountNumber, @RequestParam BigDecimal amount){
+		//compenstationg transaction endpint
+		//Called by transaction service in 2 scenarios
+		//1. fraud detected ->refund sender
+		//2. transaction completed -credit receiver
+		
+		accountService.deductBalance(accountNumber,amount);
+		return ResponseEntity.ok("Balance deducted succesfully");
+	}
+	
+	@PutMapping("{accountNumber}/credit")
+	public ResponseEntity<String> creditBalance(@PathVariable String accountNumber, @RequestParam BigDecimal amount){
+		accountService.creditBalance(accountNumber,amount);
+		return ResponseEntity.ok("Amount credited successfully");
+		
+	}
+	
+	
 }
