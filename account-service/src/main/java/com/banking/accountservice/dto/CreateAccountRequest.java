@@ -2,6 +2,7 @@ package com.banking.accountservice.dto;
 
 import java.math.BigDecimal;
 
+import com.banking.accountservice.entity.AccountStatus;
 import com.banking.accountservice.entity.AccountType;
 
 import jakarta.validation.constraints.Email;
@@ -33,6 +34,9 @@ public class CreateAccountRequest {
 	@NotNull(message = "Initial deposit is required")
 	@Positive(message = "Initial deposit must be positive")
 	private BigDecimal initialDeposit;
+
+	@NotNull 
+	private AccountStatus accountStatus;
 	
 
 }
