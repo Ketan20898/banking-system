@@ -26,6 +26,9 @@ public class FraudDetectionEventConsumer {
         
         try{
             fraudDetectionService.checkTransaction(payload);
+        }catch(Exception e)
+        {
+            log.warn("Error in Consuming event : {}", e.getMessage());
         }
     
     }
