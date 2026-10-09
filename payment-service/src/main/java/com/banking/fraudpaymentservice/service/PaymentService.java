@@ -157,13 +157,16 @@ public class PaymentService {
 
             log.info("Payment completed : ",payment.getId());
        } catch (Exception e) {
-        log.info("Error in payment");
+        log.info("Error in payment : {}",e.getMessage());
        }
     }
 
     private Map<String, Object> extractPaymentData(Map<String,Object> payload) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'extractPaymentData'");
+        Map<String,Object> entity = (Map<String,Object>) payload.get(payload);
+
+        Map<String,Object> paymentWrapper =(Map<String,Object>) entity.get("payment");
+
+        return (Map<String,Object>) paymentWrapper.get("entity");
     }
 
 }
