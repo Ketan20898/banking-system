@@ -1,3 +1,6 @@
 {
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "editor.tabCompletion": "on",
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
+          
